@@ -1,7 +1,7 @@
 {
-    "chance_to_power": {
-        "if_rais": 1,
-        "if_sunny": 0
-    },
-    "mechanic_speed": 10
+    "station_chance_to_break": 50,
+    "station_chance_to_break_time": 12,
+    "mechanic_speed": 10,
+    "generator_work_time": 6,
+    "station_repair_duration": 6
 }
