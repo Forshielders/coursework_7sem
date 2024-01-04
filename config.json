@@ -1,0 +1,7 @@
+{
+    "chance_to_power": {
+        "if_rais": 1,
+        "if_sunny": 0
+    },
+    "mechanic_speed": 10
+}
