@@ -25,7 +25,7 @@ class common_worker(ABC):
     def change_state(self):
         self.__state.change_state()
         
-    def fix(self, resource: Union(server, proxmox_claster, hadoop_claster, vm)):
+    def fix(self, resource):
         self.__env.timeout(self.__time_go_for_work)
         self.__env.timeout(self.__time_to_examine)
         if type(resource) in self.__can_fix and not resource.state_class.inner_state:
@@ -70,10 +70,10 @@ class big_boy(common_worker):
         
 class phone_support:
     def __init__(self, env: Environment):
-        __devopses = [devops(env) for x in config["WORKER_AMOUNT"]["DEVOPS"]]
-        __hadoop_enjs = [hadoop_enj(env) for x in config["WORKER_AMOUNT"]["HADOOP_ENJ"]]
-        __proxmox_enjs = [proxmox_enj(env) for x in config["WORKER_AMOUNT"]["PROXMOX_ENJ"]]
-        __big_boys = [big_boy(env) for x in config["WORKER_AMOUNT"]["BIG_BOYS"]]
+        __devopses = [devops(env) for x in range(config["WORKER_AMOUNT"]["DEVOPS"])]
+        __hadoop_enjs = [hadoop_enj(env) for x in range(config["WORKER_AMOUNT"]["HADOOP_ENJ"])]
+        __proxmox_enjs = [proxmox_enj(env) for x in range(config["WORKER_AMOUNT"]["PROXMOX_ENJ"])]
+        __big_boys = [big_boy(env) for x in range(config["WORKER_AMOUNT"]["BIG_BOY"])]
         self.__workers = {}
         self.__workers["devops"] = __devopses
         self.__workers["hadoop_enj"] = __hadoop_enjs
@@ -87,7 +87,7 @@ class phone_support:
                 return worker
         return None
         
-    def deal_with_problem(self, problem: Union(server, proxmox_claster, hadoop_claster, vm)):
+    def deal_with_problem(self, problem):
         for group in self.__workers:
             if config["RECOGNIZE_PROBLEM_CHANCE"] < randint(0, 100):
                 if type(problem) is server:

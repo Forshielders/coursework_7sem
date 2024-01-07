@@ -6,10 +6,10 @@ from random import randint
 
 class claster:
     def __init__(self, env: simpy.Environment, parent_states = []):
-        self.action = self.__env.process(self.try_to_break())
         self.__state = state(parent_states)
         self.__env = env
         self.__vms = list[vm]
+        # self.action = self.__env.process(self.try_to_break())
         
     @property
     def state(self):

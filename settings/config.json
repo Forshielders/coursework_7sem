@@ -3,5 +3,40 @@
     "station_chance_to_break_time": 12,
     "mechanic_speed": 10,
     "generator_work_time": 6,
-    "station_repair_duration": 6
+    "station_repair_duration": 6,
+    "WORKER_AMOUNT": {
+        "BASE": 0,
+        "DEVOPS": 1,
+        "HADOOP_ENJ": 1,
+        "PROXMOX_ENJ": 1,
+        "BIG_BOY": 1
+    },
+    "TIME_GO_FOR_WORK": {
+        "BASE": 0,
+        "DEVOPS": 1,
+        "HADOOP_ENJ": 1,
+        "PROXMOX_ENJ": 1,
+        "BIG_BOY": 1
+    },
+    "TIME_TO_WORK": {
+        "BASE": 0,
+        "DEVOPS": 1,
+        "HADOOP_ENJ": 1,
+        "PROXMOX_ENJ": 1,
+        "BIG_BOY": 1
+    },
+    "TIME_TO_EXAMINE": {
+        "BASE": 0,
+        "DEVOPS": 1,
+        "HADOOP_ENJ": 1,
+        "PROXMOX_ENJ": 1,
+        "BIG_BOY": 1
+    },
+    "HADOOP_CLASTERS_COUNT": 1,
+    "HADOOP_CLASTER_DISK": 1,
+
+    "PROXMOX_CLASTERS_COUNT": 1,
+    "PROXMPX_CLASTER_CPU": 1,
+    "CLASTER_BREAK_CHANCE": 0,
+    "TRY_TO_BREAK_TIME": 0
 }

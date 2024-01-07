@@ -1,12 +1,12 @@
 class state:
     def __init__(self, parents: list[object]):
-        self.__parents = list(set(parents))
+        self.parents = list(set(parents))
         self.__state = True
         
     @property
     def state(self):
         t_state = self.__state
-        for parent in state_to_list(self.__parents):
+        for parent in state_to_list(self):
             t_state = t_state and parent.state
             
     @property
@@ -17,7 +17,7 @@ class state:
         self.__state = not self.__state
         
     def me_and_dad(self):
-        return [self] + state_to_list(self.__parents)
+        return state_to_list(self)
         
-def state_to_list(state_class: state):
-    return [state_to_list(x) for x in state_class.__parents] + [state_class.state]
+def state_to_list(state_class: state) -> list[state]:
+    return [state_to_list(x) for x in state_class.parents]
