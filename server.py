@@ -1,5 +1,8 @@
 import simpy
-from . import hadoop_claster, proxmox_claster, vm, config, state
+from clasters import hadoop_claster, proxmox_claster
+from vm import vm
+from state import state
+from config import config
 
 class server:
     def __init__(self, env: simpy.Environment, name: str):

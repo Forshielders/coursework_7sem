@@ -1,6 +1,7 @@
-from . import config
+from config import config
 import simpy
 from state import state
+from server import server
 
 class vm:
     def __init__(self, env: simpy.Environment, cpu, disk, proxmox_claster, hadoop_claster, parent_states = []):
@@ -37,3 +38,22 @@ class vm:
 
     def __del__(self):
         self.__hadoop_claster.free(disk=self.__disk)
+        
+        
+class vm_delever:
+    def __init__(self, env: simpy.Environment, server: server):
+        self.__server = server
+        self.__internet_load = simpy.Container(env=env, init=config["INTERNET_CONNECTION"], capacity=config["INTERNET_CONNECTION"])
+        
+    @property
+    def internet_load(self):
+        return self.__internet_load.capacity
+    
+    def get_vm(self, cpu: int = 1, disk: int = 1):
+        t_vm = self.__server.create_vm(cpu, disk)
+        self.__internet_load.get(disk / config["INTERNET_LOAD_RATE"])
+        return t_vm
+    
+    def return_vm(self, vm: vm):
+        self.__internet_load.put(vm.disk / config["INTERNET_LOAD_RATE"])
+        self.__server.delete_vm(vm)

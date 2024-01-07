@@ -1,7 +1,7 @@
 import simpy
-import json
-from . import config, vm
-from . import state
+from config import config
+from vm import vm  
+from state import state
 from random import randint
 
 class claster:
