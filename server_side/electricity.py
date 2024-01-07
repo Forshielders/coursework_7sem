@@ -1,7 +1,7 @@
 import simpy
 import random
 #from server import server
-from vonfig import config
+from settings.vonfig import config
 
 class station:
     def __init__(self, env: simpy.Environment):

@@ -1,11 +1,11 @@
-from config import config
+from settings.vonfig import config
 from abc import ABC, abstractclassmethod
-from server import server
-from clasters import proxmox_claster, hadoop_claster
-from vm import vm
+from server_side.server import server
+from server_side.clasters import proxmox_claster, hadoop_claster
+from server_side.vm import vm
 from typing import Union
 from simpy import Environment
-from state import state
+from settings.state import state
 from random import randint
 
 class common_worker(ABC):

@@ -1,7 +1,7 @@
 import simpy
-from config import config
-from vm import vm  
-from state import state
+from settings.vonfig import config
+from server_side.vm import vm  
+from settings.state import state
 from random import randint
 
 class claster:

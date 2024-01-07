@@ -1,8 +1,8 @@
 import simpy
-from clasters import hadoop_claster, proxmox_claster
-from vm import vm
-from state import state
-from config import config
+from server_side.clasters import hadoop_claster, proxmox_claster
+from server_side.vm import vm
+from settings.vonfig import config
+from settings.state import state
 
 class server:
     def __init__(self, env: simpy.Environment, name: str):

@@ -1,7 +1,6 @@
-from config import config
 import simpy
-from state import state
-from server import server
+from settings.state import state
+from settings.vonfig import config
 
 class vm:
     def __init__(self, env: simpy.Environment, cpu, disk, proxmox_claster, hadoop_claster, parent_states = []):
@@ -41,7 +40,7 @@ class vm:
         
         
 class vm_delever:
-    def __init__(self, env: simpy.Environment, server: server):
+    def __init__(self, env: simpy.Environment, server):
         self.__server = server
         self.__internet_load = simpy.Container(env=env, init=config["INTERNET_CONNECTION"], capacity=config["INTERNET_CONNECTION"])
         
