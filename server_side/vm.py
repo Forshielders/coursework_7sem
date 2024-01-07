@@ -11,7 +11,7 @@ class vm:
         self.__proxmox_claster = proxmox_claster
         self.__hadoop_claster = hadoop_claster
         
-        self.__hadoop_claster.use(cpu=self.__cpu)
+        self.__hadoop_claster.use(disk=self.__disk)
         
     def set_number(self, number):
         self.number = number
@@ -28,6 +28,10 @@ class vm:
     def state(self):
         return self.__state.state
     
+    @property
+    def state_class(self):
+        return self.__state
+    
     def change_state(self):
         self.__state.change_state()
         if self.__state.state:
@@ -39,7 +43,7 @@ class vm:
         self.__hadoop_claster.free(disk=self.__disk)
         
         
-class vm_delever:
+class vm_deliver:
     def __init__(self, env: simpy.Environment, server):
         self.__server = server
         self.__internet_load = simpy.Container(env=env, init=config["INTERNET_CONNECTION"], capacity=config["INTERNET_CONNECTION"])

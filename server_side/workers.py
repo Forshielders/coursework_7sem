@@ -1,5 +1,4 @@
 from settings.vonfig import config
-from abc import ABC, abstractclassmethod
 from server_side.server import server
 from server_side.clasters import proxmox_claster, hadoop_claster
 from server_side.vm import vm
@@ -8,13 +7,12 @@ from simpy import Environment
 from settings.state import state
 from random import randint
 
-class common_worker(ABC):
-    @abstractclassmethod
+class common_worker:
     def __init__(self, env: Environment):
         self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["BASE"]
         self.__time_to_work = config["TIME_TO_WORK"]["BASE"]
         self.__time_to_examine = config["TIME_TO_EXAMINE"]["BASE"]
-        self.__can_fix = []
+        self.can_fix = []
         self.__env = env
         self.__state = state([])
         
@@ -26,14 +24,19 @@ class common_worker(ABC):
         self.__state.change_state()
         
     def fix(self, resource):
+        print("fixing!")
         self.__env.timeout(self.__time_go_for_work)
         self.__env.timeout(self.__time_to_examine)
-        if type(resource) in self.__can_fix and not resource.state_class.inner_state:
-            self.__env.timeout(self.__time_to_work)
+        if type(resource) in self.can_fix and not resource.state_class.inner_state:
+            print("--->", resource)
+            print("--->", resource.state)
             resource.change_state()
+            print("--->", resource.state)
+            yield self.__env.timeout(self.__time_to_work)
             return True
         else:
-            print("not my job!")
+            print("not my job! -", self.__class__.__name__, resource.__class__.__name__, 
+                  type(resource) in self.can_fix,f"in {self.can_fix}", not resource.state_class.inner_state)
             return False
             
 class devops(common_worker):
@@ -42,7 +45,7 @@ class devops(common_worker):
         self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["DEVOPS"]
         self.__time_to_work = config["TIME_TO_WORK"]["DEVOPS"]
         self.__time_to_examine = config["TIME_TO_EXAMINE"]["DEVOPS"]
-        self.__can_fix = [vm]
+        self.can_fix = [vm]
         
 class hadoop_enj(common_worker):
     def __init__(self, env: Environment):
@@ -50,7 +53,7 @@ class hadoop_enj(common_worker):
         self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["HADOOP_ENJ"]
         self.__time_to_work = config["TIME_TO_WORK"]["HADOOP_ENJ"]
         self.__time_to_examine = config["TIME_TO_EXAMINE"]["HADOOP_ENJ"]
-        self.__can_fix = [hadoop_claster]
+        self.can_fix = [hadoop_claster]
         
 class proxmox_enj(common_worker):
     def __init__(self, env: Environment):
@@ -58,7 +61,7 @@ class proxmox_enj(common_worker):
         self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["PROXMOX_ENJ"]
         self.__time_to_work = config["TIME_TO_WORK"]["PROXMOX_ENJ"]
         self.__time_to_examine = config["TIME_TO_EXAMINE"]["PROXMOX_ENJ"]
-        self.__can_fix = [proxmox_claster]
+        self.can_fix = [proxmox_claster]
         
 class big_boy(common_worker):
     def __init__(self, env: Environment):
@@ -66,7 +69,7 @@ class big_boy(common_worker):
         self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["BIG_BOY"]
         self.__time_to_work = config["TIME_TO_WORK"]["BIG_BOY"]
         self.__time_to_examine = config["TIME_TO_EXAMINE"]["BIG_BOY"]
-        self.__can_fix = [hadoop_claster, proxmox_claster, vm]
+        self.can_fix = [hadoop_claster, proxmox_claster, vm]
         
 class phone_support:
     def __init__(self, env: Environment):
@@ -105,9 +108,15 @@ class phone_support:
                 worker = self.search_free_worker(self.__workers[group])
                 if worker:
                     break
-                self.__env.timeout(config["TIME_TO_WAIT_FOR_WORKER"])
+                yield self.__env.timeout(config["TIME_TO_WAIT_FOR_WORKER"])
                 
-            if worker.fix(problem):
+            status = self.__env.process(worker.fix(problem))
+                # yield self.__env.timeout(0)
+            print("!", status)
+            if status:
                 return True
             
         raise Exception("no one can fix it!")
+    
+    def placeholder(self):
+        yield self.__env.timeout(1)

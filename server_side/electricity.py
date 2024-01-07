@@ -68,7 +68,9 @@ class generator:
         self.change_state()
         yield self.__env.timeout(duration)
 
-env = simpy.Environment()
-station1 = station(env)
-generator1 = generator(env, station1)
-env.run(until=200)
+
+if __name__ == "__main__":
+    env = simpy.Environment()
+    station1 = station(env)
+    generator1 = generator(env, station1)
+    env.run(until=200)

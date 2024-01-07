@@ -9,6 +9,7 @@ class claster:
         self.__state = state(parent_states)
         self.__env = env
         self.__vms = list[vm]
+        self.__env.process(self.try_to_break())
         # self.action = self.__env.process(self.try_to_break())
         
     @property
@@ -23,11 +24,11 @@ class claster:
         self.__state.change_state()
     
     def try_to_break(self):
-        if randint(0, 100) < config["CLASTER_BREAK_CHANCE"] and not self.__state:
+        if randint(0, 100) > config["CLASTER_BREAK_CHANCE"] and not self.__state:
             self.change_state()
             return True
         else:
-            self.__env.timeout(config["TRY_TO_BREAK_TIME"])
+            yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])
             
     def add_vm(self, vm: vm):
         self.__vms.append(vm)

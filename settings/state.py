@@ -8,6 +8,7 @@ class state:
         t_state = self.__state
         for parent in state_to_list(self):
             t_state = t_state and parent.state
+        return t_state
             
     @property
     def inner_state(self):
