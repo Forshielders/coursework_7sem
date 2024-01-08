@@ -24,7 +24,7 @@ class common_worker:
         self.__state.change_state()
         
     def fix(self, resource):
-        print("fixing!")
+        print(f"fixing {resource.__class__.__name__} by {self.__class__.__name__}!")
         if type(resource) in self.can_fix and not resource.state_class.inner_state:
             # print("---->", resource)
             # print("---->", resource.state)
@@ -53,6 +53,9 @@ class hadoop_enj(common_worker):
         self.time_to_examine = config["TIME_TO_EXAMINE"]["HADOOP_ENJ"]
         self.can_fix = [hadoop_claster]
         
+    def fix(self, resource: vm):
+        return super().fix(resource=resource.hadoop_claster)  
+        
 class proxmox_enj(common_worker):
     def __init__(self, env: Environment):
         super().__init__(env)
@@ -60,6 +63,9 @@ class proxmox_enj(common_worker):
         self.time_to_work = config["TIME_TO_WORK"]["PROXMOX_ENJ"]
         self.time_to_examine = config["TIME_TO_EXAMINE"]["PROXMOX_ENJ"]
         self.can_fix = [proxmox_claster]
+    
+    def fix(self, resource: vm):
+        return super().fix(resource.proxmox_claster)
         
 class big_boy(common_worker):
     def __init__(self, env: Environment):

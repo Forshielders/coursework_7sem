@@ -22,13 +22,16 @@ class claster:
     
     def change_state(self):
         self.__state.change_state()
+        self.__env.process(self.try_to_break())
     
     def try_to_break(self):
-        if randint(0, 100) > config["CLASTER_BREAK_CHANCE"] and not self.__state:
-            self.change_state()
-            return True
-        else:
-            yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])
+        while True:
+            if randint(0, 100) > config["CLASTER_BREAK_CHANCE"] and self.state:
+                print(self.__class__.__name__, self.state, "break")
+                self.change_state()
+                return True
+            else:
+                yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])
             
     def add_vm(self, vm: vm):
         self.__vms.append(vm)

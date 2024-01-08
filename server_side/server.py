@@ -43,8 +43,7 @@ class server:
         # req-s to classters
         th_claster = min(self.__hadoop_clasters, key=lambda x: x.disc)
         tp_claster = min(self.__proxmox_clasters, key=lambda x: x.cpu)
-        
-        t_vm = vm(self.__env, cpu, disk, tp_claster, th_claster, self.__state.me_and_dad() + th_claster.state_class.me_and_dad() + tp_claster.state_class.me_and_dad())
+        t_vm = vm(self.__env, cpu, disk, tp_claster, th_claster, self, self.__state.me_and_dad() + th_claster.state_class.me_and_dad() + tp_claster.state_class.me_and_dad())
 
         return t_vm
         

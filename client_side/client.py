@@ -29,7 +29,7 @@ class client:
         
     def work(self):
         while True:
-            print(self.__check_vms())
+            print("->", self.__check_vms())
             if self.__check_vms():
                 self.__vms.append(self.__vm_deliver.get_vm(config["CLIENT_VM_CPU"], config["CLIENT_VM_DISK"]))
                 yield self.__env.timeout(config["CLIENT_WORK_TIME"])

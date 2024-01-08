@@ -4,13 +4,15 @@ from settings.vonfig import config
 from random import randint
 
 class vm:
-    def __init__(self, env: simpy.Environment, cpu, disk, proxmox_claster, hadoop_claster, parent_states = []):
+    def __init__(self, env: simpy.Environment, cpu, disk, proxmox_claster, hadoop_claster, server, parent_states = []):
         self.__cpu = cpu
         self.__disk = disk
         self.__env = env
+        print(cpu, "--->", parent_states)
         self.__state = state(parent_states)
         self.__proxmox_claster = proxmox_claster
         self.__hadoop_claster = hadoop_claster
+        self.__server = server
         
         self.__hadoop_claster.use(disk=self.__disk)
         self.__env.process(self.try_to_break())
@@ -34,6 +36,18 @@ class vm:
     def state_class(self):
         return self.__state
     
+    @property
+    def server(self):
+        return self.__server
+    
+    @property
+    def hadoop_claster(self):
+        return self.__hadoop_claster
+    
+    @property
+    def proxmox_claster(self):
+        return self.__proxmox_claster
+    
     def change_state(self):
         self.__state.change_state()
         if self.__state.state:
@@ -44,7 +58,7 @@ class vm:
             
     def try_to_break(self):
         while True:
-            if randint(0, 100) > config["VM_BREAK_CHANCE"] and self.__state:
+            if randint(0, 100) < config["VM_BREAK_CHANCE"] and self.__state:
                 self.change_state()
                 return True
             else:
