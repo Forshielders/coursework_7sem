@@ -6,4 +6,4 @@ from simpy import Environment
 
 env = Environment()
 client = client(env, phone_support(env), vm_deliver(env, server(env, "server")))
-env.run(until=15)
+env.run(until=20)

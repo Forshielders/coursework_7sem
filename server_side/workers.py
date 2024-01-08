@@ -9,9 +9,9 @@ from random import randint
 
 class common_worker:
     def __init__(self, env: Environment):
-        self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["BASE"]
-        self.__time_to_work = config["TIME_TO_WORK"]["BASE"]
-        self.__time_to_examine = config["TIME_TO_EXAMINE"]["BASE"]
+        self.time_go_for_work = config["TIME_GO_FOR_WORK"]["BASE"]
+        self.time_to_work = config["TIME_TO_WORK"]["BASE"]
+        self.time_to_examine = config["TIME_TO_EXAMINE"]["BASE"]
         self.can_fix = []
         self.__env = env
         self.__state = state([])
@@ -25,15 +25,13 @@ class common_worker:
         
     def fix(self, resource):
         print("fixing!")
-        self.__env.timeout(self.__time_go_for_work)
-        self.__env.timeout(self.__time_to_examine)
         if type(resource) in self.can_fix and not resource.state_class.inner_state:
-            print("--->", resource)
-            print("--->", resource.state)
+            # print("---->", resource)
+            # print("---->", resource.state)
             resource.change_state()
-            print("--->", resource.state)
-            yield self.__env.timeout(self.__time_to_work)
-            return True
+            # print("---->", resource.state)
+            print(f"timeout: {self.time_go_for_work + self.time_to_examine + self.time_to_work}")
+            return self.time_go_for_work + self.time_to_examine + self.time_to_work
         else:
             print("not my job! -", self.__class__.__name__, resource.__class__.__name__, 
                   type(resource) in self.can_fix,f"in {self.can_fix}", not resource.state_class.inner_state)
@@ -42,33 +40,33 @@ class common_worker:
 class devops(common_worker):
     def __init__(self, env: Environment):
         super().__init__(env)
-        self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["DEVOPS"]
-        self.__time_to_work = config["TIME_TO_WORK"]["DEVOPS"]
-        self.__time_to_examine = config["TIME_TO_EXAMINE"]["DEVOPS"]
+        self.time_go_for_work = config["TIME_GO_FOR_WORK"]["DEVOPS"]
+        self.time_to_work = config["TIME_TO_WORK"]["DEVOPS"]
+        self.time_to_examine = config["TIME_TO_EXAMINE"]["DEVOPS"]
         self.can_fix = [vm]
         
 class hadoop_enj(common_worker):
     def __init__(self, env: Environment):
         super().__init__(env)
-        self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["HADOOP_ENJ"]
-        self.__time_to_work = config["TIME_TO_WORK"]["HADOOP_ENJ"]
-        self.__time_to_examine = config["TIME_TO_EXAMINE"]["HADOOP_ENJ"]
+        self.time_go_for_work = config["TIME_GO_FOR_WORK"]["HADOOP_ENJ"]
+        self.time_to_work = config["TIME_TO_WORK"]["HADOOP_ENJ"]
+        self.time_to_examine = config["TIME_TO_EXAMINE"]["HADOOP_ENJ"]
         self.can_fix = [hadoop_claster]
         
 class proxmox_enj(common_worker):
     def __init__(self, env: Environment):
         super().__init__(env)
-        self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["PROXMOX_ENJ"]
-        self.__time_to_work = config["TIME_TO_WORK"]["PROXMOX_ENJ"]
-        self.__time_to_examine = config["TIME_TO_EXAMINE"]["PROXMOX_ENJ"]
+        self.time_go_for_work = config["TIME_GO_FOR_WORK"]["PROXMOX_ENJ"]
+        self.time_to_work = config["TIME_TO_WORK"]["PROXMOX_ENJ"]
+        self.time_to_examine = config["TIME_TO_EXAMINE"]["PROXMOX_ENJ"]
         self.can_fix = [proxmox_claster]
         
 class big_boy(common_worker):
     def __init__(self, env: Environment):
         super().__init__(env)
-        self.__time_go_for_work = config["TIME_GO_FOR_WORK"]["BIG_BOY"]
-        self.__time_to_work = config["TIME_TO_WORK"]["BIG_BOY"]
-        self.__time_to_examine = config["TIME_TO_EXAMINE"]["BIG_BOY"]
+        self.time_go_for_work = config["TIME_GO_FOR_WORK"]["BIG_BOY"]
+        self.time_to_work = config["TIME_TO_WORK"]["BIG_BOY"]
+        self.time_to_examine = config["TIME_TO_EXAMINE"]["BIG_BOY"]
         self.can_fix = [hadoop_claster, proxmox_claster, vm]
         
 class phone_support:
@@ -86,13 +84,14 @@ class phone_support:
         
     def search_free_worker(self, worker_group: list):
         for worker in worker_group:
-            if not worker.state:
+            if worker.state:
                 return worker
         return None
         
     def deal_with_problem(self, problem):
+        print("search for worker")
         for group in self.__workers:
-            if config["RECOGNIZE_PROBLEM_CHANCE"] < randint(0, 100):
+            if config["RECOGNIZE_PROBLEM_CHANCE"] > randint(0, 100):
                 if type(problem) is server:
                     group = "big_boys"
                 elif type(problem) is proxmox_claster:
@@ -105,18 +104,20 @@ class phone_support:
                     raise Exception("unknown type of problem!")
             worker = None
             while worker is None:
+                print("-->", len(self.__workers[group]), [x.state for x in self.__workers[group]])
                 worker = self.search_free_worker(self.__workers[group])
                 if worker:
                     break
                 yield self.__env.timeout(config["TIME_TO_WAIT_FOR_WORKER"])
-                
-            status = self.__env.process(worker.fix(problem))
+            print(2)
+            status = worker.fix(problem)
                 # yield self.__env.timeout(0)
             print("!", status)
             if status:
+                yield self.__env.timeout(status)
                 return True
             
-        raise Exception("no one can fix it!")
+        # raise Exception("no one can fix it!")
     
     def placeholder(self):
         yield self.__env.timeout(1)

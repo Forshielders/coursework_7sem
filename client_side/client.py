@@ -24,11 +24,12 @@ class client:
     def __find_problem(self):
         for vm in self.__vms:
             if not vm.state:
-                print("---->", vm.state, vm, vm.cpu, vm.state_class)
+                # print("---->", vm.state_class.inner_state, vm.state, vm, vm.cpu, vm.state_class)
                 return vm
         
     def work(self):
         while True:
+            print(self.__check_vms())
             if self.__check_vms():
                 self.__vms.append(self.__vm_deliver.get_vm(config["CLIENT_VM_CPU"], config["CLIENT_VM_DISK"]))
                 yield self.__env.timeout(config["CLIENT_WORK_TIME"])
