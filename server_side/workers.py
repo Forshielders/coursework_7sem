@@ -97,17 +97,18 @@ class phone_support:
     def deal_with_problem(self, problem):
         print("search for worker")
         for group in self.__workers:
-            if config["RECOGNIZE_PROBLEM_CHANCE"] > randint(0, 100):
-                if type(problem) is server:
-                    group = "big_boys"
-                elif type(problem) is proxmox_claster:
-                    group = "proxmox_enj"
-                elif type(problem) is hadoop_claster:
-                    group = "hadoop_enj"
-                elif type(problem) is vm:
-                    group = "devops"
-                else:
-                    raise Exception("unknown type of problem!")
+            print("search in", group)
+            # if config["RECOGNIZE_PROBLEM_CHANCE"] > randint(0, 100):
+            #     if type(problem) is server:
+            #         group = "big_boys"
+            #     elif type(problem) is proxmox_claster:
+            #         group = "proxmox_enj"
+            #     elif type(problem) is hadoop_claster:
+            #         group = "hadoop_enj"
+            #     elif type(problem) is vm:
+            #         group = "devops"
+            #     else:
+            #         raise Exception("unknown type of problem!")
             worker = None
             while worker is None:
                 print("-->", len(self.__workers[group]), [x.state for x in self.__workers[group]])
