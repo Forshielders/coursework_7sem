@@ -29,5 +29,5 @@ def flatten(S):
     return S[:1] + flatten(S[1:])
 
 def state_to_list(state_class: state) -> list[state]:
-    # print([state_class] + state_to_list(x) for x in state_class.parents)
+    # # print([state_class] + state_to_list(x) for x in state_class.parents)
     return flatten([state_class] + [state_to_list(x) for x in state_class.parents])

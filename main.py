@@ -7,5 +7,5 @@ from simpy import Environment
 
 env = Environment()
 client = client(env, phone_support(env), vm_deliver(env, server(env, "server")))
-env.run(until=1000)
+env.run(until=200)
 statistic_collector.save()

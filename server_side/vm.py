@@ -9,7 +9,7 @@ class vm:
         self.__cpu = cpu
         self.__disk = disk
         self.__env = env
-        print(cpu, "--->", parent_states)
+        # print(cpu, "--->", parent_states)
         self.__state = state(parent_states)
         self.__proxmox_claster = proxmox_claster
         self.__hadoop_claster = hadoop_claster
@@ -62,7 +62,7 @@ class vm:
         while True:
             if randint(0, 100) < config["VM_BREAK_CHANCE"] and self.__state:
                 self.change_state()
-                print("----> vm break")
+                # print("----> vm break")
                 self.statistic.add(f"break_{self.__class__.__name__}", 1)
                 return True
             else:

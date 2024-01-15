@@ -19,7 +19,7 @@ class station:
 
     def proc_break(self):
         if random.randint(0, 100) <= config["station_chance_to_break"]:
-            print('break at %d' % self.__env.now)
+            # print('break at %d' % self.__env.now)
             self.change_state()        
 
     def run(self):
@@ -27,15 +27,15 @@ class station:
 
         while True:
             if self.__state:
-                print('Station start working at %d' % self.__env.now)
+                # print('Station start working at %d' % self.__env.now)
                 yield self.__env.process(self.work(config["station_chance_to_break_time"]))
             else:
-                print('Station start repairing at %d' % self.__env.now)
+                # print('Station start repairing at %d' % self.__env.now)
                 yield self.__env.process(self.repair(config["station_repair_duration"]))   
             
     def work(self, duration):
         yield self.__env.timeout(duration)
-        print('Proc break at %d' % self.__env.now)
+        # print('Proc break at %d' % self.__env.now)
         self.proc_break()
 
     def repair(self, duration):
@@ -55,10 +55,10 @@ class generator:
         while True:
             if not station1.get_state:
                 self.change_state()
-                print("start generator work")
+                # print("start generator work")
                 yield self.__env.timeout(config["generator_work_time"])
             else:
-                print("start chill generator")
+                # print("start chill generator")
                 yield self.__env.process(self.chill(config["station_chance_to_break_time"]))
 
     def chill(self, duration):

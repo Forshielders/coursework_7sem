@@ -29,7 +29,7 @@ class claster:
     def try_to_break(self):
         while True:
             if randint(0, 100) < config["CLASTER_BREAK_CHANCE"] and self.state:
-                print(self.__class__.__name__, self.state, "break")
+                # print(self.__class__.__name__, self.state, "break")
                 self.change_state()
                 self.statistic.add(f"break_{self.__class__.__name__}", 1)
                 return True

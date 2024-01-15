@@ -26,19 +26,19 @@ class common_worker:
         self.__state.change_state()
         
     def fix(self, resource):
-        print(f"fixing {resource.__class__.__name__} by {self.__class__.__name__}!")
+        # print(f"fixing {resource.__class__.__name__} by {self.__class__.__name__}!")
         if type(resource) in self.can_fix and not resource.state_class.inner_state:
-            # print("---->", resource)
-            # print("---->", resource.state)
+            # # print("---->", resource)
+            # # print("---->", resource.state)
             resource.change_state()
-            # print("---->", resource.state)
-            print(f"timeout: {self.time_go_for_work + self.time_to_examine + self.time_to_work}")
+            # # print("---->", resource.state)
+            # print(f"timeout: {self.time_go_for_work + self.time_to_examine + self.time_to_work}")
             self.statistic.add(f"fixing_{self.__class__.__name__}", self.time_go_for_work + self.time_to_examine + self.time_to_work)
             self.statistic.add(f"count_fixing_{self.__class__.__name__}", 1)
             return self.time_go_for_work + self.time_to_examine + self.time_to_work
         else:
-            print("not my job! -", self.__class__.__name__, resource.__class__.__name__, 
-                  type(resource) in self.can_fix,f"in {self.can_fix}", not resource.state_class.inner_state)
+            # print("not my job! -", self.__class__.__name__, resource.__class__.__name__, 
+            #   type(resource) in self.can_fix,f"in {self.can_fix}", not resource.state_class.inner_state)
             return False
             
 class devops(common_worker):
@@ -100,9 +100,9 @@ class phone_support(common_worker):
         return None
         
     def deal_with_problem(self, problem):
-        print("search for worker")
+        # print("search for worker")
         for group in self.__workers:
-            print("search in", group)
+            # print("search in", group)
             # if config["RECOGNIZE_PROBLEM_CHANCE"] > randint(0, 100):
             #     if type(problem) is server:
             #         group = "big_boys"
@@ -116,16 +116,16 @@ class phone_support(common_worker):
             #         raise Exception("unknown type of problem!")
             worker = None
             while worker is None:
-                print("-->", len(self.__workers[group]), [x.state for x in self.__workers[group]])
+                # print("-->", len(self.__workers[group]), [x.state for x in self.__workers[group]])
                 worker = self.search_free_worker(self.__workers[group])
                 if worker:
                     break
                 yield self.__env.timeout(config["TIME_TO_WAIT_FOR_WORKER"])
-            print(2)
+            # print(2)
             status = worker.fix(problem)
             self.statistic.add(f"searched", 1)
                 # yield self.__env.timeout(0)
-            print("!", status)
+            # print("!", status)
             if status:
                 yield self.__env.timeout(status)
                 return True
