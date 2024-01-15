@@ -27,3 +27,7 @@ class statistic_collector:
         if not cls.__logs:
             cls.logs()
         return cls.__logs
+    
+    @classmethod
+    def unload(cls):
+        cls.__logs = None

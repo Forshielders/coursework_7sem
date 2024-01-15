@@ -6,7 +6,7 @@
     "station_repair_duration": 6,
     "WORKER_AMOUNT": {
         "BASE": 0,
-        "DEVOPS": 1,
+        "DEVOPS": 2,
         "HADOOP_ENJ": 1,
         "PROXMOX_ENJ": 1,
         "BIG_BOY": 1
@@ -38,10 +38,10 @@
     "PROXMOX_CLASTERS_COUNT": 1,
     "PROXMPX_CLASTER_CPU": 100,
 
-    "CLASTER_BREAK_CHANCE": 7,
+    "CLASTER_BREAK_CHANCE": 5,
     "SERVER_BREAK_CHANCE": 0,
-    "VM_BREAK_CHANCE": 10,
-    "TRY_TO_BREAK_TIME": 50, 
+    "VM_BREAK_CHANCE": 15,
+    "TRY_TO_BREAK_TIME": 10, 
 
     "INTERNET_CONNECTION": 1000,
     "INTERNET_LOAD_RATE": 1000,
@@ -49,11 +49,11 @@
     "CLIENT_VM_CPU": 1,
     "CLIENT_VM_DISK": 1,
     "CLIENT_WORK_TIME": 2,
-    "CLIENT_WAIT_TIME": 1,
-    "TIME_TO_WAIT_FOR_WORKER": 15,
+    "CLIENT_WAIT_TIME": 3,
+    "TIME_TO_WAIT_FOR_WORKER": 1,
 
     "RECOGNIZE_PROBLEM_CHANCE": 90,
 
     "CLIENT_EXP_COUNT": 5,
-    "CLIENT_EXP_CHANCE": 5
+    "CLIENT_EXP_CHANCE": 3
 }
