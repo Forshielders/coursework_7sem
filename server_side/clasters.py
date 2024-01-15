@@ -32,6 +32,7 @@ class claster:
                 # print(self.__class__.__name__, self.state, "break")
                 self.change_state()
                 self.statistic.add(f"break_{self.__class__.__name__}", 1)
+                self.statistic.add(f"break_time_{self.__class__.__name__}", [self.__env.now])
                 return True
             else:
                 yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])
