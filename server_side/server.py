@@ -48,6 +48,9 @@ class server:
         return t_vm
         
     def delete_vm(self, vm: vm):
-        self.__vms.remove(vm)
+        try:
+            self.__vms.remove(vm)
+        except:
+            print("vm not found:", self.__vms, vm)
         del vm
         

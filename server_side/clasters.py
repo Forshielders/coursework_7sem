@@ -3,6 +3,7 @@ from settings.vonfig import config
 from server_side.vm import vm  
 from settings.state import state
 from random import randint
+from settings.statistic import statistic_collector
 
 class claster:
     def __init__(self, env: simpy.Environment, parent_states = []):
@@ -10,6 +11,7 @@ class claster:
         self.__env = env
         self.__vms = list[vm]
         self.__env.process(self.try_to_break())
+        self.statistic = statistic_collector()
         # self.action = self.__env.process(self.try_to_break())
         
     @property
@@ -26,9 +28,10 @@ class claster:
     
     def try_to_break(self):
         while True:
-            if randint(0, 100) > config["CLASTER_BREAK_CHANCE"] and self.state:
+            if randint(0, 100) < config["CLASTER_BREAK_CHANCE"] and self.state:
                 print(self.__class__.__name__, self.state, "break")
                 self.change_state()
+                self.statistic.add(f"break_{self.__class__.__name__}", 1)
                 return True
             else:
                 yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])

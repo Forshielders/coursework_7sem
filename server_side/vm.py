@@ -1,6 +1,7 @@
 import simpy
 from settings.state import state
 from settings.vonfig import config
+from settings.statistic import statistic_collector
 from random import randint
 
 class vm:
@@ -16,6 +17,7 @@ class vm:
         
         self.__hadoop_claster.use(disk=self.__disk)
         self.__env.process(self.try_to_break())
+        self.statistic = statistic_collector()
         
     def set_number(self, number):
         self.number = number
@@ -60,6 +62,8 @@ class vm:
         while True:
             if randint(0, 100) < config["VM_BREAK_CHANCE"] and self.__state:
                 self.change_state()
+                print("----> vm break")
+                self.statistic.add(f"break_{self.__class__.__name__}", 1)
                 return True
             else:
                 yield self.__env.timeout(config["TRY_TO_BREAK_TIME"])

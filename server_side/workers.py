@@ -5,6 +5,7 @@ from server_side.vm import vm
 from typing import Union
 from simpy import Environment
 from settings.state import state
+from settings.statistic import statistic_collector
 from random import randint
 
 class common_worker:
@@ -15,6 +16,7 @@ class common_worker:
         self.can_fix = []
         self.__env = env
         self.__state = state([])
+        self.statistic = statistic_collector()
         
     @property
     def state(self):
@@ -31,6 +33,8 @@ class common_worker:
             resource.change_state()
             # print("---->", resource.state)
             print(f"timeout: {self.time_go_for_work + self.time_to_examine + self.time_to_work}")
+            self.statistic.add(f"fixing_{self.__class__.__name__}", self.time_go_for_work + self.time_to_examine + self.time_to_work)
+            self.statistic.add(f"count_fixing_{self.__class__.__name__}", 1)
             return self.time_go_for_work + self.time_to_examine + self.time_to_work
         else:
             print("not my job! -", self.__class__.__name__, resource.__class__.__name__, 
@@ -75,8 +79,9 @@ class big_boy(common_worker):
         self.time_to_examine = config["TIME_TO_EXAMINE"]["BIG_BOY"]
         self.can_fix = [hadoop_claster, proxmox_claster, vm]
         
-class phone_support:
+class phone_support(common_worker):
     def __init__(self, env: Environment):
+        super().__init__(env)
         __devopses = [devops(env) for x in range(config["WORKER_AMOUNT"]["DEVOPS"])]
         __hadoop_enjs = [hadoop_enj(env) for x in range(config["WORKER_AMOUNT"]["HADOOP_ENJ"])]
         __proxmox_enjs = [proxmox_enj(env) for x in range(config["WORKER_AMOUNT"]["PROXMOX_ENJ"])]
@@ -118,6 +123,7 @@ class phone_support:
                 yield self.__env.timeout(config["TIME_TO_WAIT_FOR_WORKER"])
             print(2)
             status = worker.fix(problem)
+            self.statistic.add(f"searched", 1)
                 # yield self.__env.timeout(0)
             print("!", status)
             if status:
