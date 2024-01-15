@@ -13,7 +13,7 @@
     },
     "TIME_GO_FOR_WORK": {
         "BASE": 0,
-        "DEVOPS": 1,
+        "DEVOPS": 0,
         "HADOOP_ENJ": 1,
         "PROXMOX_ENJ": 1,
         "BIG_BOY": 1
@@ -28,31 +28,31 @@
     "TIME_TO_EXAMINE": {
         "BASE": 0,
         "DEVOPS": 1,
-        "HADOOP_ENJ": 1,
-        "PROXMOX_ENJ": 1,
+        "HADOOP_ENJ": 2,
+        "PROXMOX_ENJ": 2,
         "BIG_BOY": 1
     },
     "HADOOP_CLASTERS_COUNT": 1,
-    "HADOOP_CLASTER_DISK": 1,
+    "HADOOP_CLASTER_DISK": 100,
 
     "PROXMOX_CLASTERS_COUNT": 1,
-    "PROXMPX_CLASTER_CPU": 1,
+    "PROXMPX_CLASTER_CPU": 100,
 
-    "CLASTER_BREAK_CHANCE": 2,
+    "CLASTER_BREAK_CHANCE": 5,
     "SERVER_BREAK_CHANCE": 0,
     "VM_BREAK_CHANCE": 10,
     "TRY_TO_BREAK_TIME": 10, 
 
-    "INTERNET_CONNECTION": 10,
-    "INTERNET_LOAD_RATE": 10,
+    "INTERNET_CONNECTION": 1000,
+    "INTERNET_LOAD_RATE": 1000,
 
     "CLIENT_VM_CPU": 1,
     "CLIENT_VM_DISK": 1,
     "CLIENT_WORK_TIME": 2,
-    "CLIENT_WAIT_TIME": 0,
+    "CLIENT_WAIT_TIME": 1,
     "TIME_TO_WAIT_FOR_WORKER": 10,
 
-    "RECOGNIZE_PROBLEM_CHANCE": 100,
+    "RECOGNIZE_PROBLEM_CHANCE": 90,
 
     "CLIENT_EXP_COUNT": 3,
     "CLIENT_EXP_CHANCE": 10
