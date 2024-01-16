@@ -127,7 +127,9 @@ class phone_support(common_worker):
                 # yield self.__env.timeout(0)
             # print("!", status)
             if status:
+                worker.change_state()
                 yield self.__env.timeout(status)
+                worker.change_state()
                 return True
             
         # raise Exception("no one can fix it!")

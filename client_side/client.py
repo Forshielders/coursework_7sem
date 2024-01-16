@@ -51,6 +51,7 @@ class client:
                     for vm in self.__vms:
                         self.__vm_deliver.return_vm(vm)
                     self.__vms = []
+                    # break
                     
             if len(self.__vms) > config["CLIENT_EXP_COUNT"] and randint(0, 100) < config["CLIENT_EXP_CHANCE"]:
                     self.statistic.add("expanded", 1)
