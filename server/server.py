@@ -63,6 +63,7 @@ def plot_endpoint():
     # Return the plot as an HTTP response
     del df
     plt.clf()
+    statistic_collector.unload()
     return Response(image_bytes, mimetype='image/png')
 
 @app.route('/result', methods=['GET'])
