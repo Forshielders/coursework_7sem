@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 import { CallbackContext, PostContext } from '../../context/MyCustomContext'
-import { Button, Form, Input, InputNumber, Space, Spin } from 'antd'
+import { Button, Form, Input, Spin } from 'antd'
 import { Typography } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -8,11 +8,6 @@ function MyForm() {
   const { submitHandler, imageLoader } = useContext(CallbackContext)
   const dataObj = useContext(PostContext)
   const { data, image } = dataObj
-
-  console.log(Object.keys(data))
-  console.log(data)
-  console.log(image)
-
   const singleDataArr = []
   const doubleDataArr = []
   for (let key in data) {
@@ -21,11 +16,7 @@ function MyForm() {
     } else {
       doubleDataArr.push(key)
     }
-    console.log(`${key}: ${data[key]}`)
   }
-
-  console.log(singleDataArr)
-  console.log(doubleDataArr)
 
   const [form] = Form.useForm()
 
@@ -33,7 +24,7 @@ function MyForm() {
 
   const layout = {
     labelCol: { span: 7 },
-    wrapperCol: { span: 16 },
+    wrapperCol: { span: 7 },
   }
 
   const contentStyle = {
@@ -44,34 +35,19 @@ function MyForm() {
 
   const content = <div style={contentStyle} />
 
-  /* eslint-disable no-template-curly-in-string */
-  const validateMessages = {
-    required: '${label} is required!',
-    types: {
-      email: '${label} is not a valid email!',
-      number: '${label} is not a valid number!',
-    },
-    number: {
-      range: '${label} must be between ${min} and ${max}',
-    },
-  }
-
   useEffect(() => {
-    console.log(data)
     if (Object.keys(data).length > 0) {
       form.setFieldsValue(data)
     }
   }, [data])
 
   const onFinish = (values) => {
-    console.log(values)
-    const respData = submitHandler(values)
+    submitHandler(values)
     imageLoader()
-    console.log(respData)
   }
 
   return (
-    <div style={{ top: 0, display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ top: 0, display: 'flex', justifyContent: 'space-around' }}>
       <div
         style={{
           width: 550,
@@ -88,7 +64,6 @@ function MyForm() {
           name="nest-messages"
           onFinish={onFinish}
           style={{ width: 800, marginTop: 20 }}
-          validateMessages={validateMessages}
           form={form}
         >
           {singleDataArr.map((el) => (
@@ -103,8 +78,6 @@ function MyForm() {
           ))}
           {doubleDataArr.map((el) => {
             const value = data[el]
-            console.log(el)
-            console.log(value)
             return (
               <>
                 <Text level={5}>{el}</Text>
@@ -133,6 +106,7 @@ function MyForm() {
           alignContent: 'center',
           flexDirection: 'column',
           flexWrap: 'wrap',
+          width: 1000,
         }}
       >
         <Title level={3}>Графическое представление расчетов</Title>
