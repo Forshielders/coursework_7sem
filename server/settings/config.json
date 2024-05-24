@@ -22,7 +22,7 @@
         "BASE": 0,
         "DEVOPS": 1,
         "HADOOP_ENJ": 3,
-        "PROXMOX_ENJ": 2,
+        "PROXMOX_ENJ": 3,
         "BIG_BOY": 1
     },
     "TIME_TO_EXAMINE": {
