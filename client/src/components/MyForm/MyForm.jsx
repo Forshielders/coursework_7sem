@@ -1,21 +1,38 @@
 import { useContext, useEffect } from 'react'
-import { CallbackContext, PostContext } from '../../context/PostContext'
+import { CallbackContext, PostContext } from '../../context/MyCustomContext'
 import { Button, Form, Input, InputNumber, Space, Spin } from 'antd'
 import { Typography } from 'antd'
+import { v4 as uuidv4 } from 'uuid'
 
 function MyForm() {
   const { submitHandler, imageLoader } = useContext(CallbackContext)
-  const data = useContext(PostContext)
-  const image = useContext(PostContext)
+  const dataObj = useContext(PostContext)
+  const { data, image } = dataObj
 
+  console.log(Object.keys(data))
   console.log(data)
+  console.log(image)
+
+  const singleDataArr = []
+  const doubleDataArr = []
+  for (let key in data) {
+    if (typeof data[key] !== 'object') {
+      singleDataArr.push(key)
+    } else {
+      doubleDataArr.push(key)
+    }
+    console.log(`${key}: ${data[key]}`)
+  }
+
+  console.log(singleDataArr)
+  console.log(doubleDataArr)
 
   const [form] = Form.useForm()
 
-  const { Title } = Typography
+  const { Text, Title } = Typography
 
   const layout = {
-    labelCol: { span: 6 },
+    labelCol: { span: 7 },
     wrapperCol: { span: 16 },
   }
 
@@ -39,39 +56,30 @@ function MyForm() {
     },
   }
 
-  const user = {
-    user: {
-      name: 'okd',
-      email: 'vasya@yandex.ru',
-      age: '32',
-      website: 'https://www.google.com',
-      introduction: { data: 'o-gogo' },
-    },
-  }
-
   useEffect(() => {
-    form.setFieldsValue(user)
-
-    // if (data && data?.length > 0) {
-    //   form.setFieldsValue(user)
-    // }
-  }, [])
+    console.log(data)
+    if (Object.keys(data).length > 0) {
+      form.setFieldsValue(data)
+    }
+  }, [data])
 
   const onFinish = (values) => {
     console.log(values)
     const respData = submitHandler(values)
+    imageLoader()
     console.log(respData)
   }
 
   return (
-    <div style={{ top: 0, display: 'flex' }}>
+    <div style={{ top: 0, display: 'flex', justifyContent: 'space-between' }}>
       <div
         style={{
           width: 550,
+          height: 500,
           display: 'flex',
           alignContent: 'center',
           flexDirection: 'column',
-          flexWrap: 'wrap',
+          flexWrap: 'nowrap',
         }}
       >
         <Title level={3}>Данные для расчетов</Title>
@@ -79,40 +87,39 @@ function MyForm() {
           {...layout}
           name="nest-messages"
           onFinish={onFinish}
-          style={{ width: 700, marginTop: 20 }}
+          style={{ width: 800, marginTop: 20 }}
           validateMessages={validateMessages}
           form={form}
         >
-          <Form.Item
-            name={['user', 'name']}
-            label="Name"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={['user', 'email']}
-            label="Email"
-            rules={[{ type: 'email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={['user', 'age']}
-            label="Age"
-            rules={[{ type: 'number', min: 0, max: 99 }]}
-          >
-            <InputNumber />
-          </Form.Item>
-          <Form.Item name={['user', 'website']} label="Website">
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name={['user', 'introduction', 'data']}
-            label="Introduction"
-          >
-            <Input.TextArea />
-          </Form.Item>
+          {singleDataArr.map((el) => (
+            <Form.Item
+              key={uuidv4()}
+              name={[`${el}`]}
+              label={el}
+              // rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+          ))}
+          {doubleDataArr.map((el) => {
+            const value = data[el]
+            console.log(el)
+            console.log(value)
+            return (
+              <>
+                <Text level={5}>{el}</Text>
+                {Object.keys(value).map((data) => (
+                  <Form.Item
+                    key={uuidv4()}
+                    name={[`${el}`, `${data}`]}
+                    label={data}
+                  >
+                    <Input />
+                  </Form.Item>
+                ))}
+              </>
+            )
+          })}
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button type="primary" htmlType="submit">
               Submit
@@ -122,7 +129,6 @@ function MyForm() {
       </div>
       <div
         style={{
-          width: '100%',
           display: 'flex',
           alignContent: 'center',
           flexDirection: 'column',
@@ -131,7 +137,7 @@ function MyForm() {
       >
         <Title level={3}>Графическое представление расчетов</Title>
         {image ? (
-          <Input type="image" src={image} />
+          <Input type="image" src={image} style={{}} />
         ) : (
           <Spin style={{ top: 100 }} tip="Loading" size="large">
             {content}
