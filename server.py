@@ -13,6 +13,7 @@ from settings.statistic import statistic_collector
 from simpy import Environment
 import matplotlib.pyplot as plt
 from settings.vonfig import config
+from flask_cors import CORS
 import warnings
 import pandas
 import numpy as np
@@ -89,4 +90,5 @@ def post_config_endpoint():
         return str(e) + ' ' + str(statistic_collector.result_file_name)
 
 if __name__ == '__main__':
+    CORS(app)
     app.run()
