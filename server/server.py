@@ -2,7 +2,7 @@ import io
 import json
 import matplotlib
 matplotlib.use('Agg')
-from settings.vonfig import config
+from settings.vonfig import config_class
 import matplotlib.pyplot as plt
 from flask import Flask, Response, request, jsonify, send_file
 from client_side.client import client
@@ -12,7 +12,6 @@ from server_side.server import server
 from settings.statistic import statistic_collector
 from simpy import Environment
 import matplotlib.pyplot as plt
-from settings.vonfig import config
 from flask_cors import CORS
 import warnings
 import pandas
@@ -20,8 +19,10 @@ import numpy as np
 
 
 app = Flask(__name__)
+names_dict = json.load(open("names.json", "r"))
 result = {}
 skip = 0
+config = config_class()
 
 def parse_result():
     df = pandas.DataFrame()
@@ -31,7 +32,7 @@ def parse_result():
             if len(statistic_collector.load[key]) == 1 and statistic_collector.load[key][0] == 0:
                 continue
             # plt.plot(statistic_collector.load[key])
-            x = [np.NaN] * (config["runtime"] // 2 - len(statistic_collector.load[key])) + statistic_collector.load[key]
+            x = [np.NaN] * (config.config["runtime"] // 2 - len(statistic_collector.load[key])) + statistic_collector.load[key]
             try:
                 df[key] = np.array(x)
             except:
@@ -75,15 +76,18 @@ def get_result():
 
 @app.route('/config', methods=['GET'])
 def get_config_endpoint():
-    return jsonify(config)
+    config.translate(names_dict)
+    return jsonify(config.config)
 
 @app.route('/config', methods=['POST'])
 def post_config_endpoint():
     # config.update(request.get_data(as_text=True))
-    config.update(json.loads(request.get_data(as_text=True)))
+    config.config = json.loads(request.get_data(as_text=True))['data']
+    print(config.config)
+    config.translate(names_dict)
     env = Environment()
     client(env, phone_support(env), vm_deliver(env, server(env, "server")))
-    env.run(until=config["runtime"])
+    env.run(until=config.config["runtime"])
     statistic_collector.save()
     try:
         return send_file(statistic_collector.result_file_name)

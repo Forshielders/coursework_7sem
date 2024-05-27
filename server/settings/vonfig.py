@@ -6,6 +6,9 @@ import json
 class config_class(dict):
     __dict = {}
     
+    def __init__(self):
+        self.__dict = self.config
+    
     @property
     def config(self):
         if self.__dict == {}:
@@ -13,9 +16,19 @@ class config_class(dict):
                 self.__dict = json.load(f)
         return self.__dict
     
+    @config.setter
+    def config(self, conf: dict):
+        self.__dict = conf
+    
     @classmethod
     def add_to_config(cls, conf:dict):
         cls.__dict.update(conf)
+        
+    def translate(self, translator: dict):
+        keys = list(self.__dict.keys())
+        for key in keys:
+            self.__dict[translator[key]] = self.__dict.pop(key)
+            print(translator[key], self.__dict[translator[key]])
         
 config = config_class().config
 

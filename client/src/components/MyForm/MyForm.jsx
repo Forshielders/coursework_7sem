@@ -95,7 +95,7 @@ function MyForm() {
           })}
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button type="primary" htmlType="submit">
-              Submit
+              Отправить
             </Button>
           </Form.Item>
         </Form>
